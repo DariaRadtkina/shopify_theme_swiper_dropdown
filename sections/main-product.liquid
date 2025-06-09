@@ -50,6 +50,18 @@
       background-color: black;
     }
 
+    .product-custom-dropdown {
+      margin: 1rem 0;
+    }
+
+    .custom-dropdown {
+      padding: 0.5rem;
+      width: 100%;
+      max-width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
   {%- endstyle -%}
 
   <script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
@@ -100,6 +112,8 @@
               >
                 {{- block.settings.text -}}
               </p>
+            {%  when 'dropdown' %}
+              {% render 'custom-dropdown', product: product %}
             {%- when 'title' -%}
               <div class="product__title" {{ block.shopify_attributes }}>
                 <h1>{{ product.title | escape }}</h1>
@@ -321,14 +335,16 @@
         {% endunless %}
       {% endfor %}
     {% else %}
-      {% assign first_image = product.media | where: "media_type", "image" | first %}
-      "default": [
-        {
-          "src": "{{ first_image | image_url }}",
-          "alt": "{{ first_image.alt | split: '.' | first | strip | escape }}"
-        }
-      ]
-    {% endif %}
+      {% assign product_images = product.media | where: "media_type", "image" %}
+        {% for image in product_images %}
+        "default": [
+          {
+            "src": "{{ image.src | image_url }}",
+            "alt": "{{ image.alt | split: '.' | first | strip | escape }}"
+          }
+        ]
+        {% endfor %}
+      {% endif %}
   };
 
     if (typeof Swiper === 'undefined') {
@@ -343,12 +359,21 @@
     }
     const containerForSlides = document.getElementById('swiper-wr');
     const variantImages = window.variantImages || {};
-    const initialColor = '{{ product.selected_or_first_available_variant.title | downcase }}';
+    let initialVariantName = '{{ product.selected_or_first_available_variant.title | downcase }}';
 
-if (variantImages[initialColor] && variantImages[initialColor].length > 1) {
-    variantImages[initialColor].forEach((image) => {
+    if (!variantImages[initialVariantName] || variantImages[initialVariantName].length === 0) {
+      initialVariantName = 'default';
+    }
+
+if (variantImages[initialVariantName] && variantImages[initialVariantName].length > 0) {
+    variantImages[initialVariantName].forEach((image) => {
       const slide = document.createElement('div');
       slide.className = 'swiper-slide';
+
+       if (variantImages[initialVariantName].length === 1) {
+        slide.className += ' single-slide';
+      }
+
       slide.dataset.color = image.alt;
 
       const img = document.createElement('img');
@@ -359,33 +384,27 @@ if (variantImages[initialColor] && variantImages[initialColor].length > 1) {
       slide.appendChild(img);
       containerForSlides.appendChild(slide);
     });
-  } else if (variantImages[initialColor.split(' ')[0]]) {
-      const image = variantImages[initialColor.split(' ')[0]][0];
-      const slide = document.createElement('div');
-      slide.className = 'swiper-slide single-slide';
-      slide.dataset.color = image.alt;
-
-      const img = document.createElement('img');
-      img.className = 'gallery-image';
-      img.src = image.src;
-      img.alt = image.alt;
-
-      slide.appendChild(img);
-      containerForSlides.appendChild(slide);
-  }  else {
-    const slide = document.createElement('div');
-    slide.className = 'swiper-slide';
-    slide.innerHTML = '<p>No images available</p>';
-    containerForSlides.appendChild(slide);
-  }
-
+  } 
+  
     const blockSettings = container.dataset;
-    const slidesPerView = parseInt(blockSettings.slidesPerViewDesktop) || 1;
-    const slidesPerViewTablet = parseInt(blockSettings.slidesPerViewTablet) || 2;
-    const slidesPerViewMobile = parseInt(blockSettings.slidesPerViewMobile) || 1;
+    let slidesPerView = parseInt(blockSettings.slidesPerViewDesktop) || 1;
+    let slidesPerViewTablet = parseInt(blockSettings.slidesPerViewTablet) || 2;
+    let slidesPerViewMobile = parseInt(blockSettings.slidesPerViewMobile) || 1;
     const spaceBetween = parseInt(blockSettings.spaceBetween) || 10;
     const enablePagination = blockSettings.enablePagination === 'true';
     const enableNavigation = blockSettings.enableNavigation === 'true';
+
+    if(variantImages[initialVariantName]){
+      if (variantImages[initialVariantName].length < parseInt(blockSettings.slidesPerViewDesktop)) {
+        slidesPerView = variantImages[initialVariantName].length;
+      }
+      if (variantImages[initialVariantName].length < parseInt(blockSettings.slidesPerViewTablet)) {
+        slidesPerViewTablet = variantImages[initialVariantName].length;
+      }
+      if (variantImages[initialVariantName].length < parseInt(blockSettings.slidesPerViewMobile)) {
+        slidesPerViewMobile = variantImages[initialVariantName].length;
+      }
+    }
 
     const swiper = new Swiper(container, {
       loop: true,
@@ -484,6 +503,10 @@ if (variantImages[initialColor] && variantImages[initialColor].length > 1) {
           "default": 10
         }
       ],
+    },
+    {
+      "type": "dropdown",
+      "name": "Dropdown",
     },
     {
       "type": "text",

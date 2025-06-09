@@ -1,0 +1,49 @@
+{%- assign dropdown_options = product.metafields.custom.dropdown_list.value -%}
+{%- assign dropdown_name = product.metafields.custom.dropdown_name.value -%}
+
+{%- if dropdown_options.size > 0 -%}
+  <div class="product-custom-dropdown">
+    <label class="custom-dropdown-label" for="custom-dropdown-{{ product.id }}">{{ dropdown_name }}</label>
+    <select id="custom-dropdown-{{ product.id }}" name="custom-dropdown" class="custom-dropdown-options">
+      <option value="" disabled selected>View more detail</option>
+      {% for option in dropdown_options %}
+        <option class="custom-dropdown-option" value="{{ option | escape }}">{{ option | escape }}</option>
+      {% endfor %}
+    </select>
+  </div>
+{%- endif -%}
+
+{% style %}
+  .product-custom-dropdown {
+    font-size: 15px;
+    display: grid;
+    gap: 14px;
+    margin: 10px 0; 
+  }
+
+  .custom-dropdown-options {
+    outline: none;
+    padding: 10px;
+    width: 100%;
+    max-width: 438px;
+    height: 45px;
+    border: 2px solid #121212;
+    border-radius: 4px;
+    background-color: #fafaf9;
+  }
+
+  .custom-dropdown-options:focus-visible {
+    box-shadow: none;
+  }
+
+  .custom-dropdown-option {
+    color: #121212;
+    background-color: #fafaf9;
+  }
+
+  .custom-dropdown-option:hover {
+    color: #121212;
+    background-color: yellow;
+    cursor: pointer;
+  }
+{% endstyle %}

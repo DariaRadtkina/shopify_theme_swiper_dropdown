@@ -27,13 +27,6 @@
           "type": "title",
           "settings": {}
         },
-        "vendor": {
-          "type": "text",
-          "settings": {
-            "text": "{{ product.vendor }}",
-            "text_style": "body"
-          }
-        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -56,28 +49,24 @@
             "show_gift_card_recipient": false
           }
         },
+        "dropdown_Rz8MCM": {
+          "type": "dropdown",
+          "settings": {}
+        },
         "description": {
           "type": "description",
           "settings": {}
-        },
-        "share": {
-          "type": "share",
-          "disabled": true,
-          "settings": {
-            "share_label": "Share"
-          }
         }
       },
       "block_order": [
         "product_gallery_bJif6a",
         "title",
-        "vendor",
         "variant_picker",
         "quantity_selector",
         "price",
         "buy_buttons",
-        "description",
-        "share"
+        "dropdown_Rz8MCM",
+        "description"
       ],
       "settings": {
         "enable_sticky_info": true,
