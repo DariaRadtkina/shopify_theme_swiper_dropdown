@@ -30,6 +30,10 @@ This project showcases a flexible and responsive product gallery for Shopify sto
 - Each option in the dropdown is treated as a separate value;
 - The dropdown is not rendered if the field is empty.
 
+## Modified Files 📝
+- sections/main-product.liquid: Houses the core Liquid logic for generating the Swiper gallery structure, including the initialization of the custom dropdown and integration with product data such as variants and metafields;
+- snippets/custom-dropdown.liquid: Contains the Liquid implementation for the custom dropdown, handling the rendering of options from product metafields and ensuring the dropdown is hidden when no data is provided.
+
 ## Installation 🛠️
 
 ### 1. Prerequisites
