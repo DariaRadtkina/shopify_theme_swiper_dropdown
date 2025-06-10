@@ -23,7 +23,8 @@ This project showcases a flexible and responsive product gallery for Shopify sto
 
 ### 2. Image Filtering by Color Variant
 - Displays only images related to the selected color variant;
-- Works without page reload (based on change event on variant selector).
+- Works without page reload (based on change event on variant selector);
+- Filtering is performed based on the alt text of images, which corresponds to the selected color variant.
 
 ### 3. Dynamic Dropdown
 - Data is pulled from a product metafield;
@@ -35,4 +36,4 @@ This project showcases a flexible and responsive product gallery for Shopify sto
 - snippets/custom-dropdown.liquid: Contains the Liquid implementation for the custom dropdown, handling the rendering of options from product metafields and ensuring the dropdown is hidden when no data is provided.
 
 ## Known Issues ⚠️
-- In the current implementation, the gallery includes a check using variantImages[initialVariantName] to ensure that products with a single image are displayed in full-screen mode. This enhancement provides an optimal viewing experience for single-image products, though it requires proper CSS styling to fully realize the full-screen effect.
+- In the current implementation, the gallery includes a check to ensure that products with a single image are displayed in full-screen mode. This enhancement provides an optimal viewing experience for single-image products.
